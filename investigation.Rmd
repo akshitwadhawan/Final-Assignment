@@ -27,7 +27,20 @@ library(readxl)
 # load your data 
 data <- read_excel("data/criminal age dataset.xlsx")
 
+#renaming collumn heading
+names(data)[1] <- "age"
 
+#bar plot to compare age against total number of criminals
+
+ggplot(data, aes(
+    x = age
+    )) +
+  geom_bar() +
+  labs(
+    x = "age categories",
+    y = "number of prisonners",
+    title = "Number of prissoners by age",
+    subtitle = "data between 2022 and 2023")
 
 ```
 
