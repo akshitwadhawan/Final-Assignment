@@ -58,14 +58,14 @@ data_long$values <- as.numeric(gsub(",", "", data_long$values))
 
 ggplot(data_long, aes(
     x = age,
-    y = values,
+    y = values / 1000,
     fill = date
     )) +
   geom_bar(stat="identity") +
   labs(
     x = "age categories",
-    y = "number of prisonners",
-    title = "Number of prissoners by age",
+    y = "number of prisonners in thousands",
+    title = "Number of prisoners by age",
     subtitle = "data between 2022 and 2023",
     fill = "date")
 
