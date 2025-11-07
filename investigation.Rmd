@@ -50,7 +50,7 @@ data_long <- clean_data %>%
     values_to = "values"
   )
 
-#forcing the count value to be numeric 
+#forcing the value to be numeric 
 
 data_long$values <- as.numeric(gsub(",", "", data_long$values))
 
@@ -64,7 +64,7 @@ ggplot(data_long, aes(
   geom_bar(stat="identity") +
   labs(
     x = "age categories",
-    y = "number of prisonners in thousands",
+    y = "number of prisoners in thousands",
     title = "Number of prisoners by age",
     subtitle = "data between 2022 and 2023",
     fill = "date")
