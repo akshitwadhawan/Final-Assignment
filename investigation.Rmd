@@ -20,6 +20,7 @@ library(readxl)
 library(janitor)
 library(ggplot2)
 library(lubridate)
+library(zoo)
 # Add any other libraries here
 
 
@@ -74,4 +75,71 @@ ggplot(data_long, aes(
 
 ```
 
+```{r}
+df <- read_excel("data/criminal age dataset.xlsx")
 
+#make column name easier to type
+names(df) <- tolower(names(df))
+names(df) <- gsub(" ", "_", names(df))
+
+main_col <- names(df)[1]
+
+#change name for percentage and put them in numeric terms
+pct_col <- grep("percentage", names(df), value = TRUE)
+if(length(pct_col) > 0) {
+  names(df)[names(df) == pct_col] <- "pct_change"
+}
+
+if("pct_change" %in% names(df)) {
+  df$pct_change <- suppressWarnings(as.numeric(df$pct_change))
+}
+
+#identify category header rows
+df$category <- NA
+
+for(i in seq_len(nrow(df))) {
+  val <- df[[main_col]][i]
+  if(!grepl("[0-9]", val)) {
+    df$category[i] <- val
+  }
+}
+
+df$category <- na.locf(df$category) #fill the category downward
+
+df_clean <- df[grepl("[0-9]", df[[main_col]]), ] 
+
+# Rename
+names(df_clean)[names(df_clean) == main_col] <- "age_band"
+
+# Identify count columns
+num_cols <- names(df_clean)[sapply(df_clean, is.numeric)]
+num_cols <- setdiff(num_cols, "pct_change")
+
+# Reshape format
+df_long <- df_clean %>%
+  pivot_longer(
+    cols = all_of(num_cols),
+    names_to = "date",
+    values_to = "count"
+  )
+
+# Clean date column
+df_long$date <- gsub("^x", "", df_long$date)
+df_long$date <- dmy(df_long$date)
+
+ggplot(df_long, aes(x = date, y = count, color = age_band)) +
+  geom_line() +
+  facet_wrap(~ category, scales = "free_y") +
+  labs(
+    title = "Prison Population Over Time",
+    x = "Date",
+    y = "Number of Prisoners",
+    color = "Age Band"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+
+```
