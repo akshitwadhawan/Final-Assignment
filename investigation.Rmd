@@ -141,8 +141,8 @@ ggplot(df_long, aes(x = date, y = count, color = age_band)) +
   theme(
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
-  )
-
+    )
+view(df)
 ```
 
 ```{r}
