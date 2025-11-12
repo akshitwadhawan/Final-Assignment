@@ -21,6 +21,7 @@ library(janitor)
 library(ggplot2)
 library(lubridate)
 library(zoo)
+library(scales)
 # Add any other libraries here
 
 
@@ -143,3 +144,41 @@ ggplot(df_long, aes(x = date, y = count, color = age_band)) +
   )
 
 ```
+
+```{r}
+df <- read_excel("data/Age vs Sentence 1.0.xlsx")
+names(df)[1] <- "Category"
+
+df <- df %>%
+  mutate(across(-Category, as.numeric),
+         Total = rowSums(across(-Category), na.rm = TRUE))
+
+age_groups <- c("Adults", "18-20 year olds", "15-17 year olds")
+
+df_summary <- df %>%
+  mutate(Age = if_else(Category %in% age_groups, Category, NA_character_)) %>%
+  fill(Age) %>%
+  filter(Category %in% c(
+    "Less than or equal to 6 months",
+    "Greater than 6 months to less than 12 months",
+    "12 months to less than 4 years",
+    "4 years or more (excluding indeterminate sentences)"
+  )) %>%
+  group_by(Age, Category) %>%
+  summarise(Total = sum(Total, na.rm = TRUE)) %>%
+  mutate(Proportion = Total / sum(Total))
+
+ggplot(df_summary, aes(x = Age, y = Proportion, fill = Category)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent, breaks = seq(0, 1, 0.1)) +
+  labs(
+    title = "Proportion of Sentence Lengths by Age Group",
+    subtitle = "From 2002-2023",
+    x = "Age Group",
+    y = "Proportion", 
+    fill = "Sentence Length"
+  ) +
+  theme_minimal()
+
+```
+
