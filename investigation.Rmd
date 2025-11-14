@@ -22,6 +22,7 @@ library(ggplot2)
 library(lubridate)
 library(zoo)
 library(scales)
+library(dplyr)
 # Add any other libraries here
 
 
@@ -180,5 +181,68 @@ ggplot(df_summary, aes(x = Age, y = Proportion, fill = Category)) +
   ) +
   theme_minimal()
 
+```
+
+```{r}
+##load data
+data2 <- read_excel("data/criminal age and offense type dataset.xlsx")
+
+## Clean data, add what age group each observation is, rename columns
+data2 <- data2 %>%
+  select(1:6) %>%
+  mutate(
+    age_group = case_when(
+      row_number() %in% 1:14 ~ "Adult",
+      row_number() %in% 15:28 ~ "18-20",
+      TRUE ~ "15-17"
+    ))
+
+## Remove extra variables, remove rows that are not needed, pivot wider and 
+## add a count variable
+bar_graph_data <- data2 %>%
+  select(c(1,6,7)) %>%
+  filter(
+    ...1 != "Adults",
+    ...1 != "18-20 year olds",
+    ...1 != "15-17 year olds"
+  ) %>%
+  pivot_wider(
+    names_from = '...1' ,
+    values_from = '30-Jun-2023' 
+  )
+bar_graph_data <- bar_graph_data %>%
+  pivot_longer(
+    cols = !c(age_group),
+    names_to = "type_of_offense",
+    values_to = "count"
+  )
+
+
+
+##graph
+bar_graph_data %>%
+  ggplot(aes(
+    x = age_group, 
+    y = count, 
+    fill = type_of_offense)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  facet_wrap(
+    ~ age_group, 
+    scales = "free",
+    labeller = labeller(
+      age_group = c(
+        '15-17' = '15-17 year olds',
+        '18-20' = '18-20 year old',
+        'Adult' = 'Adults'
+      )
+    )) +
+  labs(
+    title = 'Number of each type of offense by age group' ,
+    subtitle = 'Data from June 2023' ,
+    x = 'Age group' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
 ```
 
