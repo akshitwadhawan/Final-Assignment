@@ -146,16 +146,16 @@ ggplot(df_long, aes(x = date, y = count, color = age_band)) +
 ```
 
 ```{r}
-df <- read_excel("data/Age vs Sentence 1.0.xlsx")
-names(df)[1] <- "Category"
+data <- read_excel("data/Age vs Sentence 1.0.xlsx")
+names(data)[1] <- "Category"
 
-df <- df %>%
+data <- data %>%
   mutate(across(-Category, as.numeric),
          Total = rowSums(across(-Category), na.rm = TRUE))
 
 age_groups <- c("Adults", "18-20 year olds", "15-17 year olds")
 
-df_summary <- df %>%
+data_summary <- data %>%
   mutate(Age = if_else(Category %in% age_groups, Category, NA_character_)) %>%
   fill(Age) %>%
   filter(Category %in% c(
@@ -168,7 +168,7 @@ df_summary <- df %>%
   summarise(Total = sum(Total, na.rm = TRUE)) %>%
   mutate(Proportion = Total / sum(Total))
 
-ggplot(df_summary, aes(x = Age, y = Proportion, fill = Category)) +
+ggplot(data_summary, aes(x = Age, y = Proportion, fill = Category)) +
   geom_col(position = "fill") +
   scale_y_continuous(labels = percent, breaks = seq(0, 1, 0.1)) +
   labs(
