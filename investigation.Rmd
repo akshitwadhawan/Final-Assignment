@@ -23,6 +23,7 @@ library(lubridate)
 library(zoo)
 library(scales)
 library(dplyr)
+library(tidymodels)
 # Add any other libraries here
 
 
@@ -244,5 +245,47 @@ bar_graph_data %>%
     y = 'Number of offenses' ,
     fill = 'Type of offense'
   )
+```
+
+```{r}
+#load data
+data <- read_excel("data/Copy of Punishments.xlsx")
+
+view(data)
+
+#mutate dataframe into a more useful form
+data <- data %>%
+  select(`Age group`, Offence) %>%
+  mutate(Offence_type = case_when(
+    Offence == "Violence" ~ "Violent",
+    TRUE ~ "Non-Violent"
+  ))
+
+data <- data %>%
+  select('Age group', Offence_type)
+
+
+#change Age group and Offence_type to a factor
+data$`Age group` <- as.factor(data$`Age group`)
+data$Offence_type <- as.factor(data$Offence_type)
+
+#set up training and test data
+set.seed(1116)
+data_split <- initial_split(data, prop = 0.80)
+train_data <- training(data_split)
+test_data  <- testing(data_split)
+
+#make logistic regression model
+data_model <- logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(Offence_type ~ ., data = train_data, family = 'binomial')
+tidy(data_model)
+
+#add predicted probabilities to model
+df_pred <- train_data %>%
+  bind_cols(
+    predict(data_model, train_data, type = "prob")
+  ) %>%
+  rename(pred_Violent = .pred_Violent, pred_NonViolent = `.pred_Non-Violent`)
 ```
 
