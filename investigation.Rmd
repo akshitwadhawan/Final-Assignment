@@ -252,41 +252,53 @@ bar_graph_data %>%
 #load data
 data <- read_excel("data/Copy of Punishments.xlsx")
 
-view(data)
+#mutate data frame to have an offense type variable and change variables to factors
+data <- data %>% janitor::clean_names()
 
-#mutate dataframe into a more useful form
-data <- data %>%
-  select(`Age group`, Offence) %>%
-  mutate(Offence_type = case_when(
-    Offence == "Violence" ~ "Violent",
-    TRUE ~ "Non-Violent"
-  ))
+data_offense_type <- data %>%
+  mutate(offence_type = ifelse(
+    offence == "Violence", "Violent", "Non-Violent"
+    )
+  )
 
-data <- data %>%
-  select('Age group', Offence_type)
+data_offense_type$age_group <- as.factor(data_offense_type$age_group)
+data_offense_type$offence_type <- as.factor(data_offense_type$offence_type)
+data_offense_type$sex <- as.factor(data_offense_type$sex)
 
+#split the data into a testing and training set
+set.seed(32)
+data_split <- initial_split(data_offense_type)
+data_train <- training(data_split)
+data_test <- testing(data_split)
 
-#change Age group and Offence_type to a factor
-data$`Age group` <- as.factor(data$`Age group`)
-data$Offence_type <- as.factor(data$Offence_type)
+#workflow
+data_mod <- logistic_reg() %>% 
+  set_engine("glm")
 
-#set up training and test data
-set.seed(1116)
-data_split <- initial_split(data, prop = 0.80)
-train_data <- training(data_split)
-test_data  <- testing(data_split)
+data_rec <- recipe(offence_type ~ age_group + sex, data = data_train)
 
-#make logistic regression model
-data_model <- logistic_reg() %>%
-  set_engine("glm") %>%
-  fit(Offence_type ~ ., data = train_data, family = 'binomial')
-tidy(data_model)
+data_wflow <- workflow() %>%
+  add_recipe(data_rec) %>%
+  add_model(data_mod)
 
-#add predicted probabilities to model
-df_pred <- train_data %>%
-  bind_cols(
-    predict(data_model, train_data, type = "prob")
+data_fit <- fit(data_wflow, data_train)
+
+tidy(data_fit)
+
+#Model evaluation of model containing all categorical predictors
+pred_test <- predict(
+  data_fit, data_test, type = "prob"
+) %>%
+  bind_cols(data_test %>% select(offence_type))
+
+pred_test %>%
+  roc_curve(
+    truth = offence_type,
+    `.pred_Non-Violent`,
+    event_level = "first"
   ) %>%
-  rename(pred_Violent = .pred_Violent, pred_NonViolent = `.pred_Non-Violent`)
+  autoplot()
+
+roc_auc(pred_test, truth = offence_type, `.pred_Non-Violent`)
 ```
 
