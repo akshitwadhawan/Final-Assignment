@@ -81,9 +81,9 @@ ggplot(data_long, aes(
 
 
 ```{r}
-#Predominant function of establishment against age scatterplot
-
 data <- read_excel("data/Copy of Punishments.xlsx")
+
+#having to set the data into the different age categories
 
 data <- data %>%
   mutate(
@@ -93,23 +93,26 @@ data <- data %>%
     `Predominant function of establishment` = factor(`Predominant function of establishment`)
   )
 
-# Plot
-ggplot(data, aes(
+#making the graph having to make it into count plot so the frequency can be determined
+
+ggplot(data,
+       aes(
     x = `Age group`,
     y = `Predominant function of establishment`
 )) +
-    geom_count(color="steelblue", alpha = 0.7) +
+    geom_count(color="Green", alpha = 0.7) +
     scale_size_area(max_size = 20) +
     labs(
-        title = "Count Plot: Frequency of Establishment Function by Age Group",
+        title = "Frequency of Establishment Function by Age Group",
         x = "Age group",
         y = "Predominant function of establishment",
         size = "Count"
     ) +
-    theme_minimal() +
-    theme(
-        axis.text.x = element_text(angle = 45, hjust = 1)
-)
+    theme_minimal()+ 
+  theme( axis.text.x = element_text(angle = 45, hjust = 1) 
+         )
+
+#using these functions since labels are longer so readability becomes better
 ```
 
 
