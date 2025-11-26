@@ -79,6 +79,41 @@ ggplot(data_long, aes(
 
 ```
 
+
+```{r}
+#Predominant function of establishment against age scatterplot
+
+data <- read_excel("data/Copy of Punishments.xlsx")
+
+data <- data %>%
+  mutate(
+    `Age group` = factor(`Age group`, 
+                         levels = c("15 - 17", "18 - 20", "21 - 24", "25 - 29",
+                                    "30 - 39", "40 - 49", "50 - 59", "60 - 69", "70 and over")),
+    `Predominant function of establishment` = factor(`Predominant function of establishment`)
+  )
+
+# Plot
+ggplot(data, aes(
+    x = `Age group`,
+    y = `Predominant function of establishment`
+)) +
+    geom_count(color="steelblue", alpha = 0.7) +
+    scale_size_area(max_size = 20) +
+    labs(
+        title = "Count Plot: Frequency of Establishment Function by Age Group",
+        x = "Age group",
+        y = "Predominant function of establishment",
+        size = "Count"
+    ) +
+    theme_minimal() +
+    theme(
+        axis.text.x = element_text(angle = 45, hjust = 1)
+)
+```
+
+
+
 ```{r}
 df <- read_excel("data/criminal age dataset.xlsx")
 
