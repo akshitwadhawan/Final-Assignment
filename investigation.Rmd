@@ -389,7 +389,13 @@ data_type_sex %>%
     facet_wrap(
       ~ sex, 
       scales = "free",
-    )
+    ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on sex' ,
+    x = 'Sex' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
 
 ##bar plot of number of offences versus establishment type (with offence_type stacked)
 data_type_est <- data_type %>%
@@ -420,6 +426,12 @@ data_type_est %>%
   facet_wrap(
     ~ est_type, 
     scales = "free",
+  ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on establishment type' ,
+    x = 'Establishment type' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
   )
 
 ##bar plot of number of offences versus age group (with offence_type stacked)
@@ -451,6 +463,12 @@ data_type_age %>%
   facet_wrap(
     ~ age_group, 
     scales = "free",
+  ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on age group' ,
+    x = 'Age' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
   )
 ```
 
