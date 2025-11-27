@@ -1,7 +1,6 @@
 ---
-title: ""
-subtitle: "Presentation subtitle (if any)"
-author: "Team name <br> Names of team members"
+title: "Investigating the Predictors of Violent Crime"
+author: "Workshop 10 <br> Euan McKerron, Yujun Ling, Akshit Wadhawan & Ariane Baillie"
 institute: "University of Edinburgh"
 date: "`r Sys.Date()`"
 output:
