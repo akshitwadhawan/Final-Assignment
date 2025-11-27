@@ -340,3 +340,117 @@ pred_test %>%
 roc_auc(pred_test, truth = offence_type, `.pred_Non-Violent`)
 ```
 
+```{r}
+#load data
+data <- read_excel("data/Copy of Punishments.xlsx")
+data <- data %>% janitor::clean_names()
+
+#organise and mutate dataset to use for project
+data_type <- data %>%
+  mutate(offence_type = ifelse(
+    offence == "Violence", "Violent", "Non-Violent"
+  )) %>%
+  select(predominant_function_of_establishment, age_group, offence_type, sex)
+
+data_type$age_group <- as.factor(data_type$age_group)
+data_type$offence_type <- as.factor(data_type$offence_type)
+data_type$predominant_function_of_establishment <- as.factor(data_type$predominant_function_of_establishment)
+data_type$sex <- as.factor(data_type$sex)
+
+colnames(data_type) <- c("est_type", "age_group", "offence_type", "sex")
+
+#bar plots to see if there are any trends in the data
+##bar plot of number of offences versus sex (with offence_type stacked)
+data_type_sex <- data_type %>%
+  select(offence_type, sex) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_sex_tibble <- data_type_sex %>%
+  pivot_wider(
+    names_from = sex,
+    values_from = count,
+    values_fn = sum
+  )
+as_tibble(data_type_sex_tibble)
+
+data_type_sex %>%
+  ggplot(aes(
+    x = sex, 
+    y = count, 
+    fill = offence_type)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    facet_wrap(
+      ~ sex, 
+      scales = "free",
+    )
+
+##bar plot of number of offences versus establishment type (with offence_type stacked)
+data_type_est <- data_type %>%
+  select(offence_type, est_type) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_est_tibble <- data_type_est %>%
+  pivot_wider(
+    names_from = est_type,
+    values_from = count,
+    values_fn = sum
+  )
+as_tibble(data_type_est_tibble)
+
+data_type_est %>%
+  ggplot(aes(
+    x = est_type, 
+    y = count, 
+    fill = offence_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  facet_wrap(
+    ~ est_type, 
+    scales = "free",
+  )
+
+##bar plot of number of offences versus age group (with offence_type stacked)
+data_type_age <- data_type %>%
+  select(offence_type, age_group) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_age_tibble <- data_type_age %>%
+  pivot_wider(
+    names_from = age_group,
+    values_from = count,
+    values_fn = sum
+  )
+as_tibble(data_type_age_tibble)
+
+data_type_age %>%
+  ggplot(aes(
+    x = age_group, 
+    y = count, 
+    fill = offence_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  facet_wrap(
+    ~ age_group, 
+    scales = "free",
+  )
+```
+
