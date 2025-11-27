@@ -973,8 +973,8 @@ data_mod_est &lt;- logistic_reg() %&gt;%
 data_rec_est &lt;- recipe(offence_type ~ age_group, data = data_train)
 
 data_wflow_est &lt;- workflow() %&gt;%
-  add_recipe(data_rec_age) %&gt;%
-  add_model(data_mod_age)
+  add_recipe(data_rec_est) %&gt;%
+  add_model(data_mod_est)
 
 data_fit_est &lt;- fit(data_wflow_est, data_train)
 
