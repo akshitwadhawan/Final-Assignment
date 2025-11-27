@@ -206,7 +206,78 @@ ggplot(df_long, aes(x = date, y = count, color = age_band)) +
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "bottom"
     )
-view(df)
+
+
+#summary statistics
+summary(df)
+
+#inspect original data
+colnames(df)
+
+#convert from wide to long format
+df_long <- df %>%
+  pivot_longer(
+    cols = c(`30-jun-2022`, `30-sep-2022`, `31-dec-2022`,
+             `31-mar-2023`, `30-jun-2023`),
+    names_to = "date",
+    values_to = "value"
+  ) %>%
+  mutate(
+    date = dmy(date)
+  )
+
+#clean column names
+df_long <- df_long %>%
+  rename(age_group = ...1)
+
+#summary of the whole dataset
+summary(df_long)
+
+#summary by age group
+summary_by_age <- df_long %>%
+  group_by(age_group) %>%
+  summarise(
+    mean_value  = mean(value, na.rm = TRUE),
+    sd_value    = sd(value, na.rm = TRUE),
+    min_value   = min(value, na.rm = TRUE),
+    max_value   = max(value, na.rm = TRUE),
+    total_value = sum(value, na.rm = TRUE),
+    n           = n()
+  )
+
+summary_by_age
+
+#summary by date
+summary_by_date <- df_long %>%
+  group_by(date) %>%
+  summarise(
+    mean_value = mean(value, na.rm = TRUE),
+    total_value = sum(value, na.rm = TRUE),
+    n = n()
+  )
+
+summary_by_date
+
+#summary by category and date
+summary_by_cat_date <- df_long %>%
+  group_by(category, date) %>%
+  summarise(
+    mean_value = mean(value, na.rm = TRUE),
+    total_value = sum(value, na.rm = TRUE),
+    n = n()
+  )
+
+summary_by_cat_date
+
+#trends
+df_avg <- df_long %>%
+  group_by(category, date) %>%
+  summarise(value = mean(value, na.rm = TRUE))
+
+ggplot(df_avg, aes(date, value, color = category)) +
+  geom_line() + geom_point()
+  theme_minimal()
+
 ```
 
 ```{r}
