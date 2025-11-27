@@ -116,13 +116,63 @@ class: inverse, middle, center
 ---
 
 # Graphs
+.pull-left[
+```{r, echo = FALSE}
 
-- Use `---` to separate slides and `--` for incremental builds
+data <- read_excel("data/Copy of Punishments.xlsx")
 
---
+#having to set the data into the different age categories
 
-- (describe what each bar plot shows in terms of changing proportion of violent to non-violent crimes, because sex doesnt have any change say why we discount it going forward in the investigation)
+data <- data %>%
+  mutate(
+    `Age group` = factor(`Age group`, 
+                         levels = c("15 - 17", "18 - 20", "21 - 24", "25 - 29",
+                                    "30 - 39", "40 - 49", "50 - 59", "60 - 69", "70 and over")),
+    `Predominant function of establishment` = factor(`Predominant function of establishment`)
+  )
 
+#making the graph having to make it into count plot so the frequency can be determined
+
+ggplot(data,
+       aes(
+    x = `Age group`,
+    y = `Predominant function of establishment`
+)) +
+    geom_count(color="Green", alpha = 0.7) +
+    scale_size_area(max_size = 20) +
+    labs(
+        title = "Frequency of Establishment Function by Age Group",
+        x = "Age group",
+        y = "Predominant function of establishment",
+        size = "Count"
+    ) +
+    theme_minimal()+ 
+  theme( axis.text.x = element_text(angle = 45, hjust = 1) 
+         )
+
+#- Use `---` to separate slides and `--` for incremental builds
+
+
+#- (describe what each bar plot shows in terms of changing proportion of violent to non-violent crimes, because sex doesnt have any change say why we discount it going forward in the investigation)
+
+```
+As you can see in this count plot it is clear that with the exception of youth institutions all the different establishments showed the highest number of inhabitants with individuals aged 30-39. 
+
+]
+.pull-right[
+```{r, echo = FALSE}
+data$`No of days` <- as.numeric(data$`No of days`)
+
+data %>%
+  group_by(`Age group`) %>%
+  summarise(
+    mean_days = mean(`No of days`, na.rm = TRUE),
+    median_days = median(`No of days`, na.rm = TRUE),
+    total_days = sum(`No of days`, na.rm = TRUE)
+  )
+```
+
+This table highlights the disparity in the amount of time each age groups are spending in these establishments ]
 ---
 
 # Layouts

@@ -79,13 +79,33 @@ class: inverse, middle, center
 ---
 
 # Graphs
+.pull-left[
+&lt;img src="presentation_files/figure-html/unnamed-chunk-3-1.png" width="80%" /&gt;
+As you can see in this count plot it is clear that with the exception of youth institutions all the different establishments showed the highest number of inhabitants with individuals aged 30-39. 
 
-- Use `---` to separate slides and `--` for incremental builds
+]
+.pull-right[
 
---
+```
+## Warning: NAs introduced by coercion
+```
 
-- (describe what each bar plot shows in terms of changing proportion of violent to non-violent crimes, because sex doesnt have any change say why we discount it going forward in the investigation)
+```
+## # A tibble: 9 × 4
+##   `Age group` mean_days median_days total_days
+##   &lt;fct&gt;           &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+## 1 15 - 17          11.1          10       9462
+## 2 18 - 20          11.0          10      41430
+## 3 21 - 24          13.2          14      78737
+## 4 25 - 29          13.5          14      97267
+## 5 30 - 39          13.8          14     130721
+## 6 40 - 49          13.9          14      56802
+## 7 50 - 59          13.7          14      18966
+## 8 60 - 69          12.3          14       3615
+## 9 70 and over      12            14        564
+```
 
+This table highlights the disparity in the amount of time each age groups are spending in these establishments ]
 ---
 
 # Layouts
