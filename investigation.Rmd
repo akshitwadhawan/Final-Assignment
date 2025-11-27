@@ -453,18 +453,26 @@ data <- read_excel("data/Copy of Punishments.xlsx")
 data <- data %>% janitor::clean_names()
 
 #organise and mutate dataset to use for project
-data_type <- data %>%
+data <- read_excel("data/Copy of Punishments.xlsx")
+
+data_names <- data %>% janitor::clean_names()
+
+data_type <- data_names %>%
   mutate(offence_type = ifelse(
-    offence == "Violence", "Violent", "Non-Violent"
-  )) %>%
-  select(predominant_function_of_establishment, age_group, offence_type, sex)
+    offence == "Violence", "Violent", "Non-Violent"),
+    fct_recode(age_group, 'X15' = '15 - 17',  'X18' = '18 - 20',  'X21' = '21 - 24',
+               'X25' = '25 - 29',  'X30' = '30 - 39',  'X40' = '40 - 49',
+               'X50' = '50 - 59',  'X60' = '60 - 69',  'X70' = '70 and over')
+  ) %>%
+  rename(age_mod = `fct_recode(...)`) %>%
+  select(predominant_function_of_establishment, age_group, offence_type, sex, age_mod)
 
 data_type$age_group <- as.factor(data_type$age_group)
 data_type$offence_type <- as.factor(data_type$offence_type)
 data_type$predominant_function_of_establishment <- as.factor(data_type$predominant_function_of_establishment)
 data_type$sex <- as.factor(data_type$sex)
 
-colnames(data_type) <- c("est_type", "age_group", "offence_type", "sex")
+colnames(data_type) <- c("est_type", "age_group", "offence_type", "sex", "age_mod")
 
 #bar plots to see if there are any trends in the data
 ##bar plot of number of offences versus sex (with offence_type stacked)
@@ -581,6 +589,12 @@ data_type_age %>%
 
 ```{r model-eval}
 #Model evaluation
+#split the data into a testing and training set
+set.seed(32)
+data_split <- initial_split(data_type)
+data_train <- training(data_split)
+data_test <- testing(data_split)
+
 ## ROC curve of all categorical predictors
 pred_test <- predict(
   data_fit, data_test, type = "prob"
@@ -595,13 +609,14 @@ pred_test %>%
   ) %>%
   autoplot()
 
-roc_auc(pred_test, truth = offence_type, `.pred_Violent`)
+roc_auc(pred_test, truth = offence_type, `.pred_Violent`, event_level = "second")
 
 ## ROC curve of only age_group
 data_mod_age <- logistic_reg() %>% 
   set_engine("glm")
 
-data_rec_age <- recipe(offence_type ~ age_group, data = data_train)
+data_rec_age <- recipe(offence_type ~ age_mod, data = data_train) %>%
+  step_dummy(all_nominal(), -all_outcomes())
 
 data_wflow_age <- workflow() %>%
   add_recipe(data_rec_age) %>%
@@ -624,13 +639,14 @@ pred_test_age %>%
   ) %>%
   autoplot()
 
-roc_auc(pred_test_age, truth = offence_type, `.pred_Violent`)
+roc_auc(pred_test_age, truth = offence_type, `.pred_Violent`, event_level = "second")
 
 ## ROC curve of only establishment type
 data_mod_est <- logistic_reg() %>% 
   set_engine("glm")
 
-data_rec_est <- recipe(offence_type ~ age_group, data = data_train)
+data_rec_est <- recipe(offence_type ~ est_type, data = data_train) %>%
+  step_dummy(all_nominal(), -all_outcomes())
 
 data_wflow_est <- workflow() %>%
   add_recipe(data_rec_est) %>%
@@ -653,6 +669,6 @@ pred_test_est %>%
   ) %>%
   autoplot()
 
-roc_auc(pred_test_est, truth = offence_type, `.pred_Violent`)
+roc_auc(pred_test_est, truth = offence_type, `.pred_Violent`, event_level = "second")
 ```
 
