@@ -42,13 +42,13 @@ class: center, middle, inverse, title-slide
 
 # Introduction
 
-- This project explores how factors such as age, sex, and location shape both the types of offences committed and the sentencing outcomes that follow. By analyzing these patterns in the available data, we also investigate whether it is possible to make reliable predictions about future crime trends and understand how these factors interact over time.
+- This project looks at how different factors like age, sex, and location might influence the kinds of offences people commit and the sentences they receive. By looking at the patterns in the data, we can get a sense of whether these factors might actually help us predict future crime trends, and how their influence seems to shift over time.
 
 ---
 
 # Data Overview
 
-- This investigation uses data from the Offender Management Statistics Quarterly: January to March 2023, published by the Ministry of Justice. The dataset provides detailed administrative records on individuals entering, leaving, or serving sentences within the criminal justice system in England and Wales.
+- This investigation draws on data from the Offender Management Statistics Quarterly: January to March 2023, published by the Ministry of Justice. The dataset offers detailed records on people entering, leaving, or serving sentences within the criminal justice system in England and Wales, giving a clear picture of how individuals move through the system.
 - Our main variables after cleaning includes:
 
 |Variable |Type |Description |
@@ -61,7 +61,14 @@ These variables allow us to explore how age, sex, offence type, location, and se
 
 #Exploratory statistics
 
-- Write about what the statistics suggests about offence type being influenced by variables, and which variables show a strong influence
+The statistics suggest that offence type is influenced by several key variables:
+- Age, this shows a strong effect, with younger offenders more likely to be involved in certain violent or high-risk offences, while older groups tend to appear more often in less impulsive or lower-severity categories. 
+
+- Sex, this doesn’t seem to be major predictor, although overall males committed more crimes but the rate of violent versus non-violent is around the same. 
+
+- Together, these variables indicate that offence type is not random but closely linked to demographic and contextual factors, with age showing the strongest influence in the data.
+
+Write about what the statistics suggests about offence type being influenced by variables, and which variables show a strong influence
 
 ---
 
@@ -235,9 +242,9 @@ class: inverse, middle, center
 
 ---
 
-# Conclusion
+# References
 
-- (add reference at bottom)
+- Offender Management Statistics Quarterly: January to March 2023. Ministry of Justice, 2023. https://www.gov.uk/government/statistics/offender-management-statistics-quarterly-january-to-march-2023
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
