@@ -1,5 +1,5 @@
 ---
-title: "Presentation title"
+title: ""
 subtitle: "Presentation subtitle (if any)"
 author: "Team name <br> Names of team members"
 institute: "University of Edinburgh"
