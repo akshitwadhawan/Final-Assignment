@@ -77,6 +77,16 @@ ggplot(data_long, aes(
     subtitle = "data between 2022 and 2023",
     fill = "date")
 
+
+#creating a summary statistic to calculate the percentage of all prisoners that fit into each category
+
+percentage_by_age <- data_long %>%
+  group_by(age) %>%
+  summarise(total = sum(values, na.rm = TRUE)) %>%
+  mutate(percent = total / sum(total) * 100)
+
+percentage_by_age
+
 ```
 
 
@@ -234,6 +244,19 @@ ggplot(data_summary, aes(x = Age, y = Proportion, fill = Category)) +
   ) +
   theme_minimal()
 
+
+#summary statistics calculating mean, median and standard deviation based on the sentence length calculated in thousands so easier to interperet
+
+sentence_category <- data_summary %>%
+  group_by(Category) %>%
+  summarise(
+    total = sum(Total)/1000,
+    mean = mean(Total)/1000,
+    median = median(Total)/1000,
+    sd = sd(Total)/1000
+  )
+
+sentence_category
 ```
 
 ```{r}
