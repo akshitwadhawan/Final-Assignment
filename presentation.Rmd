@@ -30,6 +30,14 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
+library(readxl)
+library(janitor)
+library(ggplot2)
+library(lubridate)
+library(zoo)
+library(scales)
+library(dplyr)
+library(yardstick)
 ```
 
 ```{r setup, include=FALSE}
@@ -39,18 +47,16 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 
 ```{r load-data, include=FALSE}
 # Load your data here
-
+data <- read_excel("data/Copy of Punishments.xlsx")
 ```
 
 ```{r include=FALSE}
 
 #Background image
 style_xaringan(
-  title_slide_background_image = "img/confetti.jpg"
+  title_slide_background_image = "img/ministry of justice.jpg"
 )
 ```
-
-class: center, middle
 
 ## A statement of the overall goal / research question
 
