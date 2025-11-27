@@ -48,6 +48,21 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 ```{r load-data, include=FALSE}
 # Load your data here
 data <- read_excel("data/Copy of Punishments.xlsx")
+
+data_names <- data %>% janitor::clean_names()
+
+data_type <- data_names %>%
+  mutate(offence_type = ifelse(
+    offence == "Violence", "Violent", "Non-Violent"
+  )) %>%
+  select(predominant_function_of_establishment, age_group, offence_type, sex)
+
+data_type$age_group <- as.factor(data_type$age_group)
+data_type$offence_type <- as.factor(data_type$offence_type)
+data_type$predominant_function_of_establishment <- as.factor(data_type$predominant_function_of_establishment)
+data_type$sex <- as.factor(data_type$sex)
+
+colnames(data_type) <- c("est_type", "age_group", "offence_type", "sex")
 ```
 
 ```{r include=FALSE}
@@ -58,39 +73,36 @@ style_xaringan(
 )
 ```
 
-## A statement of the overall goal / research question
+
+# Introduction
+
+- Writing about research question and the variables in both the raw and cleaned dataset
+
+--
+
+- Show table of description of variables used in clean data
 
 ---
 
-class: inverse, center, middle
+#Exploratory statistics
 
-# Section title
-
----
-
-# Hello World
-
-- Click the `Knit` button to compile your presentation
-
-- Make sure to commit and push all resulting files to your GitHub repo
+- Write about what the statistics suggests about offence type being influenced by variables, and which variables show a strong influence
 
 ---
 
 class: inverse, middle, center
 
-# Using xaringan
+# Initial Exploration and Data Visualisations
 
 ---
 
-# xaringan
-
-- The presentation is created using the `xaringan` package
+# Graphs
 
 - Use `---` to separate slides and `--` for incremental builds
 
 --
 
-- Like this
+- (describe what each bar plot shows in terms of changing proportion of violent to non-violent crimes, because sex doesnt have any change say why we discount it going forward in the investigation)
 
 ---
 
@@ -114,50 +126,29 @@ or text in two columns $^*$
 
 ---
 
-# Code
-
-```{r boring-regression}
-# a boring regression
-model <- lm(dist ~ speed, data = cars)
-tidy(model)
-glance(model)
-```
-
----
-
-# Plots
-
-```{r recode-species, echo = FALSE}
-# In this chunk I'm doing a bunch of analysis that I don't want to present 
-# in my slides. But I need the resulting data frame for a plot I want to present.
-iris_modified <- iris %>%
-  mutate(Species = fct_other(Species, keep = "setosa"))
-```
-
-```{r plot-iris, echo = FALSE}
-# Code hidden with echo = FALSE
-# Uses modified iris dataset from previous chunk
-# Play around with height and width until you're happy with the look
-ggplot(data = iris_modified, mapping = aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
-  geom_point() + 
-  theme_minimal() # theme options: https://ggplot2.tidyverse.org/reference/ggtheme.html
-```
-
----
-
-## Plot and text
+# Code/ table example
 
 .pull-left[
 - Some text
 - goes here
 ]
 .pull-right[
-```{r warning=FALSE, out.width="100%", fig.width=4, echo=FALSE}
-# see how I changed out.width and fig.width from defaults
-# to make the figure bigger
-ggplot(penguins, aes(x = bill_length_mm, y = species, color = species)) +
-  geom_boxplot() +
-  theme_minimal()
+```{r table, echo = FALSE}
+# table, hiding the code with echo = FALSE
+data_type_sex <- data_type %>%
+  select(offence_type, sex) %>%
+  mutate(
+    count = n(),
+    count = case_when(count == 37552 ~ 1),
+    count = as.numeric(count))
+
+data_type_sex_tibble <- data_type_sex %>%
+  pivot_wider(
+    names_from = sex,
+    values_from = count,
+    values_fn = sum
+  )
+as_tibble(data_type_sex_tibble)
 ```
 ]
 
@@ -209,13 +200,22 @@ Limitations:
 
 ---
 
-# Feeling adventurous?
+class: inverse, middle, center
 
-- Want to find out more about `xaringan`? See https://slides.yihui.name/xaringan/#1.
+# Modelling and Model Evaluation
 
-- You are welcome to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
+---
 
-- But some of you might want to play around with slide styling. The 
-`xaringanthemer` provides some solutions for this that: https://pkg.garrickadenbuie.com/xaringanthemer.
+# Add stuff to do with model here
 
-- And if you want more bells and whistles, there is also `xaringanExtra`: https://pkg.garrickadenbuie.com/xaringanExtra.
+---
+
+class: inverse, middle, center
+
+# Conclusion
+
+---
+
+# Conclusion
+
+- (add reference at bottom)
