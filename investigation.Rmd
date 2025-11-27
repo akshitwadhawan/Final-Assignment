@@ -79,6 +79,44 @@ ggplot(data_long, aes(
 
 ```
 
+
+```{r}
+data <- read_excel("data/Copy of Punishments.xlsx")
+
+#having to set the data into the different age categories
+
+data <- data %>%
+  mutate(
+    `Age group` = factor(`Age group`, 
+                         levels = c("15 - 17", "18 - 20", "21 - 24", "25 - 29",
+                                    "30 - 39", "40 - 49", "50 - 59", "60 - 69", "70 and over")),
+    `Predominant function of establishment` = factor(`Predominant function of establishment`)
+  )
+
+#making the graph having to make it into count plot so the frequency can be determined
+
+ggplot(data,
+       aes(
+    x = `Age group`,
+    y = `Predominant function of establishment`
+)) +
+    geom_count(color="Green", alpha = 0.7) +
+    scale_size_area(max_size = 20) +
+    labs(
+        title = "Frequency of Establishment Function by Age Group",
+        x = "Age group",
+        y = "Predominant function of establishment",
+        size = "Count"
+    ) +
+    theme_minimal()+ 
+  theme( axis.text.x = element_text(angle = 45, hjust = 1) 
+         )
+
+#using these functions since labels are longer so readability becomes better
+```
+
+
+
 ```{r}
 df <- read_excel("data/criminal age dataset.xlsx")
 
@@ -300,5 +338,137 @@ pred_test %>%
   autoplot()
 
 roc_auc(pred_test, truth = offence_type, `.pred_Non-Violent`)
+```
+
+```{r}
+#load data
+data <- read_excel("data/Copy of Punishments.xlsx")
+data <- data %>% janitor::clean_names()
+
+#organise and mutate dataset to use for project
+data_type <- data %>%
+  mutate(offence_type = ifelse(
+    offence == "Violence", "Violent", "Non-Violent"
+  )) %>%
+  select(predominant_function_of_establishment, age_group, offence_type, sex)
+
+data_type$age_group <- as.factor(data_type$age_group)
+data_type$offence_type <- as.factor(data_type$offence_type)
+data_type$predominant_function_of_establishment <- as.factor(data_type$predominant_function_of_establishment)
+data_type$sex <- as.factor(data_type$sex)
+
+colnames(data_type) <- c("est_type", "age_group", "offence_type", "sex")
+
+#bar plots to see if there are any trends in the data
+##bar plot of number of offences versus sex (with offence_type stacked)
+data_type_sex <- data_type %>%
+  select(offence_type, sex) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_sex_tibble <- data_type_sex %>%
+  pivot_wider(
+    names_from = sex,
+    values_from = count,
+    values_fn = sum
+  )
+as_tibble(data_type_sex_tibble)
+
+data_type_sex %>%
+  ggplot(aes(
+    x = sex, 
+    y = count, 
+    fill = offence_type)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    facet_wrap(
+      ~ sex, 
+      scales = "free",
+    ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on sex' ,
+    x = 'Sex' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
+
+##bar plot of number of offences versus establishment type (with offence_type stacked)
+data_type_est <- data_type %>%
+  select(offence_type, est_type) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_est_tibble <- data_type_est %>%
+  pivot_wider(
+    names_from = est_type,
+    values_from = count,
+    values_fn = sum
+  )
+as_tibble(data_type_est_tibble)
+
+data_type_est %>%
+  ggplot(aes(
+    x = est_type, 
+    y = count, 
+    fill = offence_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  facet_wrap(
+    ~ est_type, 
+    scales = "free",
+  ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on establishment type' ,
+    x = 'Establishment type' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
+
+##bar plot of number of offences versus age group (with offence_type stacked)
+data_type_age <- data_type %>%
+  select(offence_type, age_group) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_age_tibble <- data_type_age %>%
+  pivot_wider(
+    names_from = age_group,
+    values_from = count,
+    values_fn = sum
+  )
+as_tibble(data_type_age_tibble)
+
+data_type_age %>%
+  ggplot(aes(
+    x = age_group, 
+    y = count, 
+    fill = offence_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  facet_wrap(
+    ~ age_group, 
+    scales = "free",
+  ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on age group' ,
+    x = 'Age' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
 ```
 
