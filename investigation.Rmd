@@ -508,3 +508,80 @@ data_type_age %>%
   )
 ```
 
+```{r model-eval}
+#Model evaluation
+## ROC curve of all categorical predictors
+pred_test <- predict(
+  data_fit, data_test, type = "prob"
+) %>%
+  bind_cols(data_test %>% select(offence_type))
+
+pred_test %>%
+  roc_curve(
+    truth = offence_type,
+    `.pred_Violent`,
+    event_level = "second"
+  ) %>%
+  autoplot()
+
+roc_auc(pred_test, truth = offence_type, `.pred_Violent`)
+
+## ROC curve of only age_group
+data_mod_age <- logistic_reg() %>% 
+  set_engine("glm")
+
+data_rec_age <- recipe(offence_type ~ age_group, data = data_train)
+
+data_wflow_age <- workflow() %>%
+  add_recipe(data_rec_age) %>%
+  add_model(data_mod_age)
+
+data_fit_age <- fit(data_wflow_age, data_train)
+
+tidy(data_fit_age)
+
+pred_test_age <- predict(
+  data_fit_age, data_test, type = "prob"
+) %>%
+  bind_cols(data_test %>% select(offence_type))
+
+pred_test_age %>%
+  roc_curve(
+    truth = offence_type,
+    `.pred_Violent`,
+    event_level = "second"
+  ) %>%
+  autoplot()
+
+roc_auc(pred_test_age, truth = offence_type, `.pred_Violent`)
+
+## ROC curve of only establishment type
+data_mod_est <- logistic_reg() %>% 
+  set_engine("glm")
+
+data_rec_est <- recipe(offence_type ~ age_group, data = data_train)
+
+data_wflow_est <- workflow() %>%
+  add_recipe(data_rec_est) %>%
+  add_model(data_mod_est)
+
+data_fit_est <- fit(data_wflow_est, data_train)
+
+tidy(data_fit_est)
+
+pred_test_est <- predict(
+  data_fit_est, data_test, type = "prob"
+) %>%
+  bind_cols(data_test %>% select(offence_type))
+
+pred_test_est %>%
+  roc_curve(
+    truth = offence_type,
+    `.pred_Violent`,
+    event_level = "second"
+  ) %>%
+  autoplot()
+
+roc_auc(pred_test_est, truth = offence_type, `.pred_Violent`)
+```
+
