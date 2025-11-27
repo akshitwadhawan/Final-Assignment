@@ -113,6 +113,19 @@ ggplot(data,
          )
 
 #using these functions since labels are longer so readability becomes better
+
+
+#creating some summary statistics on this data
+
+data$`No of days` <- as.numeric(data$`No of days`)
+
+data %>%
+  group_by(`Age group`) %>%
+  summarise(
+    mean_days = mean(`No of days`, na.rm = TRUE),
+    median_days = median(`No of days`, na.rm = TRUE),
+    total_days = sum(`No of days`, na.rm = TRUE)
+  )
 ```
 
 
