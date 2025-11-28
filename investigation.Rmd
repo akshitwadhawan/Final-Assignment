@@ -599,7 +599,7 @@ data_test <- testing(data_split)
 data_mod <- logistic_reg() %>% 
   set_engine("glm")
 
-data_rec <- recipe(offence_type ~ est_type, age_mod, data = data_train) %>%
+data_rec <- recipe(offence_type ~ est_type + age_mod, data = data_train) %>%
   step_dummy(all_nominal(), -all_outcomes())
 
 data_wflow <- workflow() %>%
