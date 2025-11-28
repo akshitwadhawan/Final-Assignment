@@ -225,7 +225,7 @@ These graphs show how the proportion of violent to non-violent crime changes bas
 
 class: middle
 
-.pull-left[
+
 ```{r, echo = FALSE}
 
 data <- read_excel("data/Copy of Punishments.xlsx")
@@ -267,21 +267,7 @@ ggplot(data,
 ```
 As you can see in this count plot it is clear that with the exception of youth institutions all the different establishments showed the highest number of inhabitants with individuals aged 30-39. 
 
-]
-.pull-right[
-```{r, echo = FALSE}
-data$`No of days` <- as.numeric(data$`No of days`)
 
-data %>%
-  group_by(`Age group`) %>%
-  summarise(
-    mean_days = mean(`No of days`, na.rm = TRUE),
-    median_days = median(`No of days`, na.rm = TRUE),
-    total_days = sum(`No of days`, na.rm = TRUE)
-  )
-```
-
-This table highlights the disparity in the amount of time each age groups are spending in these establishments ]
 
 ---
 
