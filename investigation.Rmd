@@ -448,15 +448,13 @@ roc_auc(pred_test, truth = offence_type, `.pred_Non-Violent`)
 ```
 
 ```{r}
-#load data
-data <- read_excel("data/Copy of Punishments.xlsx")
-data <- data %>% janitor::clean_names()
-
-#organise and mutate dataset to use for project
+#mutate data frame to have an offense type variable and change variables to factors
+# Load your data here
 data <- read_excel("data/Copy of Punishments.xlsx")
 
 data_names <- data %>% janitor::clean_names()
 
+#mutate data frame to have an offense type variable and change variables to factors
 data_type <- data_names %>%
   mutate(offence_type = ifelse(
     offence == "Violence", "Violent", "Non-Violent"),
@@ -589,6 +587,8 @@ data_type_age %>%
 
 ```{r model-eval}
 #Model evaluation
+## ROC curve of all categorical predictors
+#Model evaluation
 #split the data into a testing and training set
 set.seed(32)
 data_split <- initial_split(data_type)
@@ -596,6 +596,20 @@ data_train <- training(data_split)
 data_test <- testing(data_split)
 
 ## ROC curve of all categorical predictors
+data_mod <- logistic_reg() %>% 
+  set_engine("glm")
+
+data_rec <- recipe(offence_type ~ est_type, age_mod, data = data_train) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+data_wflow <- workflow() %>%
+  add_recipe(data_rec) %>%
+  add_model(data_mod)
+
+data_fit <- fit(data_wflow, data_train)
+
+tidy(data_fit)
+
 pred_test <- predict(
   data_fit, data_test, type = "prob"
 ) %>%
