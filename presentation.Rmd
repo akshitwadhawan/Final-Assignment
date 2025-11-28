@@ -86,11 +86,11 @@ style_xaringan(
 --
 
 
-- This project looks at how different factors like age, sex, and establishment type might influence the kinds of offences people commit. 
+- This project looks at how different factors like age, sex, and establishment type influence whether offenders commit violent or non-violent crimes. 
 
 --
 
-- By looking at the patterns in the data, we can get a sense of whether these factors might actually help us predict future crime trends, and how their influence seems to shift over time.
+- By looking at the patterns in the data, we can get a sense of whether these factors might help us predict trends within prison populations.
 
 ---
 
@@ -504,12 +504,13 @@ pred_test %>%
 
 ---
 
-class: inverse, middle, center
 
 # Conclusion
 
+This project demonstrates that age group and establishment type influences whether a crime an offender commits is violent or non-violent.
 ---
 
 # References
 
-- Offender Management Statistics Quarterly: January to March 2023. Ministry of Justice, 2023. https://www.gov.uk/government/statistics/offender-management-statistics-quarterly-january-to-march-2023
+- Offender Management Statistics Quarterly: January to March 2023. (2023). Ministry of Justice, HM Prison and Probation Service.
+https://www.gov.uk/government/statistics/offender-management-statistics-quarterly-january-to-march-2023
