@@ -46,23 +46,27 @@ knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618,
 ```
 
 ```{r load-data, include=FALSE}
-# Load your data here
 data <- read_excel("data/Copy of Punishments.xlsx")
 
 data_names <- data %>% janitor::clean_names()
 
+#mutate data frame to have an offense type variable and change variables to factors
 data_type <- data_names %>%
   mutate(offence_type = ifelse(
-    offence == "Violence", "Violent", "Non-Violent"
-  )) %>%
-  select(predominant_function_of_establishment, age_group, offence_type, sex)
+    offence == "Violence", "Violent", "Non-Violent"),
+    fct_recode(age_group, 'X15' = '15 - 17',  'X18' = '18 - 20',  'X21' = '21 - 24',
+               'X25' = '25 - 29',  'X30' = '30 - 39',  'X40' = '40 - 49',
+               'X50' = '50 - 59',  'X60' = '60 - 69',  'X70' = '70 and over')
+  ) %>%
+  rename(age_mod = `fct_recode(...)`) %>%
+  select(predominant_function_of_establishment, age_group, offence_type, sex, age_mod)
 
 data_type$age_group <- as.factor(data_type$age_group)
 data_type$offence_type <- as.factor(data_type$offence_type)
 data_type$predominant_function_of_establishment <- as.factor(data_type$predominant_function_of_establishment)
 data_type$sex <- as.factor(data_type$sex)
 
-colnames(data_type) <- c("est_type", "age_group", "offence_type", "sex")
+colnames(data_type) <- c("est_type", "age_group", "offence_type", "sex", "age_mod")
 ```
 
 ```{r include=FALSE}
@@ -86,9 +90,9 @@ style_xaringan(
 - Our main variables after cleaning includes:
 ```{r, echo = FALSE, results = 'asis'}
 Var_table <- data.frame(
-  Variable = c("", "", ""),
-  Type = c("", "", ""),
-  Description = c("", "", "")
+  Variable = c("offence_type", "age_group", "est_type", "sex"),
+  Type = c("factor", "factor", "factor", "factor"),
+  Description = c("Describes whether a crime was violent or non-violent.", "The age group of the offender.", "The type of establishment the offender was located in.", "The sex of the offender.")
 )
 
 knitr::kable(Var_table)
@@ -399,7 +403,39 @@ class: inverse, middle, center
 
 ---
 
-# Add stuff to do with model here
+# Modelling
+
+- Based off of the prior data visualisations, we chose age group and establishment type as the explanatory variables. As our target variable was whether a crime was violent or non-violent, a binary outcome, we chose to use logistic regression as our model choice.
+
+--
+
+- The output of the fitted model is as shown on the next slide. A positive coefficient indicates that the corresponding predictor is associated with a higher likelihood of a crime being violent, the intercept indicates that the overall probability of a crime being violent is < 0.5. The coefficient of the open type establishment was the lowest at -3.27, indicating that it has a significantly higher probability of a crime being non-violent compared to the baseline of the high security establishment. The local type establishment has the highest coefficient of all the predictors at 0.362, showing that it is more likely for a crime to be violent compared to high security.
+
+---
+
+```{r model, echo = FALSE}
+set.seed(32)
+data_split <- initial_split(data_type)
+data_train <- training(data_split)
+data_test <- testing(data_split)
+
+## ROC curve of all categorical predictors
+data_mod <- logistic_reg() %>% 
+  set_engine("glm")
+
+data_rec <- recipe(offence_type ~ est_type + age_mod, data = data_train) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+data_wflow <- workflow() %>%
+  add_recipe(data_rec) %>%
+  add_model(data_mod)
+
+data_fit <- fit(data_wflow, data_train)
+
+tidy(data_fit) %>%
+  kable(format = "html")
+```
+
 
 ---
 

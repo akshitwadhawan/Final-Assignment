@@ -51,11 +51,12 @@ class: center, middle, inverse, title-slide
 - This investigation draws on data from the Offender Management Statistics Quarterly: January to March 2023, published by the Ministry of Justice. The dataset offers detailed records on people entering, leaving, or serving sentences within the criminal justice system in England and Wales, giving a clear picture of how individuals move through the system.
 - Our main variables after cleaning includes:
 
-|Variable |Type |Description |
-|:--------|:----|:-----------|
-|         |     |            |
-|         |     |            |
-|         |     |            |
+|Variable     |Type   |Description                                            |
+|:------------|:------|:------------------------------------------------------|
+|offence_type |factor |Describes whether a crime was violent or non-violent.  |
+|age_group    |factor |The age group of the offender.                         |
+|est_type     |factor |The type of establishment the offender was located in. |
+|sex          |factor |The sex of the offender.                               |
 These variables allow us to explore how age, sex, offence type, location, and sentence length relate to violent crime. Using official government data ensures the analysis is reliable and nationally representative.
 ---
 
@@ -294,7 +295,142 @@ class: inverse, middle, center
 
 ---
 
-# Add stuff to do with model here
+# Modelling
+
+- Based off of the prior data visualisations, we chose age group and establishment type as the explanatory variables. As our target variable was whether a crime was violent or non-violent, a binary outcome, we chose to use logistic regression as our model choice.
+
+--
+
+- The output of the fitted model is as shown on the next slide. A positive coefficient indicates that the corresponding predictor is associated with a higher likelihood of a crime being violent, the intercept indicates that the overall probability of a crime being violent is &lt; 0.5. The coefficient of the open type establishment was the lowest at -3.27, indicating that it has a significantly higher probability of a crime being non-violent compared to the baseline of the high security establishment. The local type establishment has the highest coefficient of all the predictors at 0.362, showing that it is more likely for a crime to be violent compared to high security.
+
+---
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.8554198 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1510470 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.6632683 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; est_type_Category.B &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0307445 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0950397 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.3234908 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7463236 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; est_type_Category.C &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1938443 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0761862 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.5443478 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0109482 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; est_type_Category.D..Open. &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.2665551 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4540282 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -7.1946089 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; est_type_Female &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1980526 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1031327 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.9203667 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0548116 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; est_type_Local &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3616324 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0748687 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.8302248 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000014 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; est_type_Young.Offender.Institution..YOI. &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2118675 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0947541 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.2359716 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0253536 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; est_type_Youth.Justice.Board &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1390731 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1581611 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8793126 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3792318 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1809085 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1303490 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.3878777 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1651743 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.5211095 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1360163 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.8312293 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0001275 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.8057169 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1378844 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.8434224 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.0652173 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1379602 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -7.7211930 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.2485026 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1443629 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -8.6483619 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.2880499 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1638184 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -7.8626679 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X60 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.6135266 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2648776 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -6.0915937 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; age_mod_X70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.3549142 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5437673 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.4917173 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0127127 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
 
 ---
 
