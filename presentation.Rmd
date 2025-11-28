@@ -80,7 +80,7 @@ style_xaringan(
 
 # Introduction
 
-- This project looks at how different factors like age, sex, and location might influence the kinds of offences people commit and the sentences they receive. By looking at the patterns in the data, we can get a sense of whether these factors might actually help us predict future crime trends, and how their influence seems to shift over time.
+This project looks at how different factors like age, sex, and location might influence the kinds of offences people commit and the sentences they receive. By looking at the patterns in the data, we can get a sense of whether these factors might actually help us predict future crime trends, and how their influence seems to shift over time.
 
 ---
 
@@ -103,6 +103,107 @@ These variables allow us to explore how age, sex, offence type, location, and se
 class: inverse, middle, center
 
 # Initial Exploration and Data Visualisations
+
+---
+
+class: middle
+
+.pull-left[
+```{r bar-plots-sex, echo = FALSE}
+#bar plots to see if there are any trends in the data
+##bar plot of number of offences versus sex (with offence_type stacked)
+data_type_sex <- data_type %>%
+  select(offence_type, sex) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_sex %>%
+  ggplot(aes(
+    x = sex, 
+    y = count, 
+    fill = offence_type)) +
+    geom_bar(stat = "identity") +
+    theme_minimal() +
+    facet_wrap(
+      ~ sex, 
+      scales = "free",
+    ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on sex' ,
+    x = 'Sex' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
+```
+
+```{r bar-plots-age, echo = FALSE}
+data_type_est <- data_type %>%
+  select(offence_type, est_type) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_est %>%
+  ggplot(aes(
+    x = est_type, 
+    y = count, 
+    fill = offence_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  facet_wrap(
+    ~ est_type, 
+    scales = "free",
+  ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on establishment type' ,
+    x = 'Establishment type' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
+```
+]
+.pull-right[
+```{r bar-plots-est, echo = FALSE}
+data_type_age <- data_type %>%
+  select(offence_type, age_group) %>%
+  mutate(
+    count = n(),
+    count = case_when(
+      count == 37552 ~ 1
+    ),
+    count = as.numeric(count)
+  )
+
+data_type_age %>%
+  ggplot(aes(
+    x = age_group, 
+    y = count, 
+    fill = offence_type)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  facet_wrap(
+    ~ age_group, 
+    scales = "free",
+  ) +
+  labs(
+    title = 'Proportion of violent to non-violent crime based on age group' ,
+    x = 'Age' ,
+    y = 'Number of offenses' ,
+    fill = 'Type of offense'
+  )
+```
+
+These graphs show how the proportion of violent to non-violent crime changes based on the independent variables of the dataset. Based on the first graph, sex doesn't seem to be a predictor due to there being no change between male and female offenders. Establishment type and age groups appear to have an effect on the proportion so can be investigated later on in the model as predictors.
+]
 
 ---
 
