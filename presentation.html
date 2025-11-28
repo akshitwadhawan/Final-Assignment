@@ -139,7 +139,7 @@ The prior data visualisations suggest that offence type is influenced by several
 
 --
 
-- Establishment type, also shows a strong effect with the sites geared towards young offenders being more likely to commit violent crime and the lower-security sites showing a lower rate of violent crime. This variable is also linked with age as some of the sites that an offender is placed in are dependent on the age of the offender.
+- Establishment type, also shows a strong effect with the sites geared towards young offenders being more likely to commit violent crime and the lower-security sites showing a lower rate of violent crime.
 
 --
 
@@ -346,8 +346,6 @@ class: middle
 .pull-left[
 - To assess the performance of the model, a ROC curve was plotted with both categorical predictors included, the AUC of this curve was calculated to be 0.646. The AUC value shows that the model is moderately effective at identifying if a crime is violent or non-violent.
 
---
-
 - The seperate ROC curves for age group and establishment type were also plotted, with the AUC for both of them being 0.615 showing that age group and establishment type are equally strong predictors.
 ]
 .pull-right[
@@ -356,10 +354,25 @@ class: middle
 
 ---
 
+class: inverse, middle, center
 
 # Conclusion
 
-This project demonstrates that age group and establishment type influences whether a crime an offender commits is violent or non-violent.
+---
+
+# Limitations and Considerations
+
+- The categories of violent and non-violent crimes where created from a variable listing many different categories of crime. They were sorted into the two categories by having 'violence' become violent crime and all others be non-violent , however, what is categorised as a violent crime can change based on people's different definitions so the model created might not always represent all crimes that could be thought of as violent.
+
+--
+
+- The age group variable has an influence on the establishment type variable due to some of it's categories being age dependent. This might explain why the two ROC curves for each predictor ended up being so similar. 
+
+---
+# Conclusion
+
+This project demonstrates that age group and establishment type moderately influences whether a crime an offender commits is violent or non-violent. In future investigations, more variables could be considered to build a better predictor of the offence type of offenders.
+
 ---
 
 # References
