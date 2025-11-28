@@ -42,13 +42,20 @@ class: center, middle, inverse, title-slide
 
 # Introduction
 
-This project looks at how different factors like age, sex, and location might influence the kinds of offences people commit and the sentences they receive. By looking at the patterns in the data, we can get a sense of whether these factors might actually help us predict future crime trends, and how their influence seems to shift over time.
+- This project looks at how different factors like age, sex, and establishment type might influence the kinds of offences people commit. 
+
+--
+
+- By looking at the patterns in the data, we can get a sense of whether these factors might actually help us predict future crime trends, and how their influence seems to shift over time.
 
 ---
 
 # Data Overview
 
 - This investigation draws on data from the Offender Management Statistics Quarterly: January to March 2023, published by the Ministry of Justice. The dataset offers detailed records on people entering, leaving, or serving sentences within the criminal justice system in England and Wales, giving a clear picture of how individuals move through the system.
+
+--
+
 - Our main variables after cleaning includes:
 
 |Variable     |Type   |Description                                            |
@@ -57,7 +64,10 @@ This project looks at how different factors like age, sex, and location might in
 |age_group    |factor |The age group of the offender.                         |
 |est_type     |factor |The type of establishment the offender was located in. |
 |sex          |factor |The sex of the offender.                               |
-These variables allow us to explore how age, sex, offence type, location, and sentence length relate to violent crime. Using official government data ensures the analysis is reliable and nationally representative.
+
+--
+
+These variables allow us to explore how age, sex, establishment type and offence type relate to violent crime. Using official government data ensures the analysis is reliable and nationally representative.
 ---
 
 class: inverse, middle, center
@@ -81,7 +91,8 @@ These graphs show how the proportion of violent to non-violent crime changes bas
 
 ---
 
-# Graphs
+class: middle
+
 .pull-left[
 &lt;img src="presentation_files/figure-html/unnamed-chunk-3-1.png" width="80%" /&gt;
 As you can see in this count plot it is clear that with the exception of youth institutions all the different establishments showed the highest number of inhabitants with individuals aged 30-39. 
@@ -112,9 +123,9 @@ This table highlights the disparity in the amount of time each age groups are sp
 
 ---
 
-#Exploratory statistics
+#Exploratory Observations
 
-The statistics suggest that offence type is influenced by several key variables:
+The prior data visualisations suggest that offence type is influenced by several key variables:
 
 --
 
@@ -194,6 +205,7 @@ class: inverse, middle, center
 - The output of the fitted model is as shown on the next slide. A positive coefficient indicates that the corresponding predictor is associated with a higher likelihood of a crime being violent, the intercept indicates that the overall probability of a crime being violent is &lt; 0.5. The coefficient of the open type establishment was the lowest at -3.27, indicating that it has a significantly higher probability of a crime being non-violent compared to the baseline of the high security establishment. The local type establishment has the highest coefficient of all the predictors at 0.362, showing that it is more likely for a crime to be violent compared to high security.
 
 ---
+class: middle
 
 &lt;table&gt;
  &lt;thead&gt;
