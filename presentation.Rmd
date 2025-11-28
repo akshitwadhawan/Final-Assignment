@@ -281,15 +281,36 @@ class: inverse, middle, center
 
 # Modelling
 
--Based off of the prior data visualisations, we chose age group and establishment type as the explanatory variables. As our target variable was whether a crime was violent or non-violent, a binary outcome, we chose to use logistic regression as our model choice.
+- Based off of the prior data visualisations, we chose age group and establishment type as the explanatory variables. As our target variable was whether a crime was violent or non-violent, a binary outcome, we chose to use logistic regression as our model choice.
 
 --
 
-.pull-left[
-- Some text
-- goes here
-]
-.pull-right[
+- The output of the fitted model is as shown on the next slide. A positive coefficient indicates that the corresponding predictor is associated with a higher likelihood of a crime being violent, the intercept indicates that the overall probability of a crime being violent is < 0.5. The coefficient of the open type establishment was the lowest at -3.27, indicating that it has a significantly higher probability of a crime being non-violent compared to the baseline of the high security establishment. The local type establishment has the highest coefficient of all the predictors at 0.362, showing that it is more likely for a crime to be violent compared to high security.
+
+---
+
+```{r model, echo = FALSE}
+set.seed(32)
+data_split <- initial_split(data_type)
+data_train <- training(data_split)
+data_test <- testing(data_split)
+
+## ROC curve of all categorical predictors
+data_mod <- logistic_reg() %>% 
+  set_engine("glm")
+
+data_rec <- recipe(offence_type ~ est_type + age_mod, data = data_train) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+data_wflow <- workflow() %>%
+  add_recipe(data_rec) %>%
+  add_model(data_mod)
+
+data_fit <- fit(data_wflow, data_train)
+
+tidy(data_fit) %>%
+  kable(format = "html")
+```
 
 
 ---
