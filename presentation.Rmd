@@ -436,6 +436,33 @@ tidy(data_fit) %>%
   kable(format = "html")
 ```
 
+---
+
+# Model Evaluation
+
+.pull-left[
+- To assess the performance of the model, a ROC curve was plotted with both categorical predictors included, the AUC of this curve was calculated to be 0.646. The AUC value shows that the model is moderately effective at identifying if a crime is violent or non-violent.
+
+--
+
+- The seperate ROC curves for age group and establishment type were also plotted, with the AUC for both of them being 0.615 showing that age group and establishment type are equally strong predictors.
+]
+.pull-right[
+```{r ROC-curve, echo = FALSE}
+pred_test <- predict(
+  data_fit, data_test, type = "prob"
+) %>%
+  bind_cols(data_test %>% select(offence_type))
+
+pred_test %>%
+  roc_curve(
+    truth = offence_type,
+    `.pred_Violent`,
+    event_level = "second"
+  ) %>%
+  autoplot()
+```
+]
 
 ---
 
