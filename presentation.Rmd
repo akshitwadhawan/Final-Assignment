@@ -174,6 +174,130 @@ data %>%
 
 This table highlights the disparity in the amount of time each age groups are spending in these establishments ]
 ---
+#Number of prisoners by age 
+.pull-left[ 
+```{r,echo=FALSE, results='hide',message=FALSE}
+
+# load your data 
+data <- read_excel("data/criminal age dataset.xlsx")
+
+#renaming column heading and cleaning the data so that mini headings are not in the age column
+names(data)[1] <- "age"
+
+clean_data <- data %>%
+  filter(
+    !age %in% c("Males and Females", "Remand", "Sentenced", "Non criminal prisoners")
+  )
+
+#removing the percentage change column
+
+clean_data <- clean_data %>%
+  select(-`Percentage change \r\nJune 2022 to 2023`)
+
+
+#having to change the format of the data set to long form
+
+data_long <- clean_data %>%
+  pivot_longer(
+    cols = -age,
+    names_to = "date",
+    values_to = "values"
+  )
+
+#forcing the value to be numeric 
+
+data_long$values <- as.numeric(gsub(",", "", data_long$values))
+
+#bar plot to compare age against total number of criminals
+
+ggplot(data_long, aes(
+    x = age,
+    y = values / 1000,
+    fill = date
+    )) +
+  geom_bar(stat="identity") +
+  labs(
+    x = "age categories",
+    y = "number of prisoners in thousands",
+    title = "Number of prisoners by age",
+    subtitle = "data between 2022 and 2023",
+    fill = "date")
+
+
+
+
+```
+
+We first found the number of prisoners per age group and found that the largest number of offenders are within the age range of  30-39. We found that the further away you move on either side of this category - the younger and/or older you get- there are less people in the prison system/ less offenders.]
+
+.pull-right[
+```{r, echo=FALSE}
+percentage_by_age <- data_long %>%
+  group_by(age) %>%
+  summarise(total = sum(values, na.rm = TRUE)) %>%
+  mutate(percent = total / sum(total) * 100)
+
+percentage_by_age
+```
+This table highlights the percentage that an age group makes up of the overall prison poulation]
+---
+#Proportion of sentence lengths by age groups
+.pull-left[
+```{r, echo=FALSE,warning=FALSE, message=FALSE}
+data <- read_excel("data/Age vs Sentence 1.0.xlsx")
+names(data)[1] <- "Category"
+
+data <- data %>%
+  mutate(across(-Category, as.numeric),
+         Total = rowSums(across(-Category), na.rm = TRUE))
+
+age_groups <- c("Adults", "18-20 year olds", "15-17 year olds")
+
+data_summary <- data %>%
+  mutate(Age = if_else(Category %in% age_groups, Category, NA_character_)) %>%
+  fill(Age) %>%
+  filter(Category %in% c(
+    "Less than or equal to 6 months",
+    "Greater than 6 months to less than 12 months",
+    "12 months to less than 4 years",
+    "4 years or more (excluding indeterminate sentences)"
+  )) %>%
+  group_by(Age, Category) %>%
+  summarise(Total = sum(Total, na.rm = TRUE)) %>%
+  mutate(Proportion = Total / sum(Total))
+
+ggplot(data_summary, aes(x = Age, y = Proportion, fill = Category)) +
+  geom_col(position = "fill") +
+  scale_y_continuous(labels = percent, breaks = seq(0, 1, 0.1)) +
+  labs(
+    title = "Proportion of Sentence Lengths by Age Group",
+    subtitle = "From 2002-2023",
+    x = "Age Group",
+    y = "Proportion", 
+    fill = "Sentence Length"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+```
+
+```{r, echo=FALSE}
+sentence_category <- data_summary %>%
+  group_by(Category) %>%
+  summarise(
+    total = sum(Total)/1000,
+    mean = mean(Total)/1000,
+    median = median(Total)/1000,
+    sd = sd(Total)/1000
+  )
+
+sentence_category
+```
+]
+
+.pull-right[Shown in this graph is that the younger you are the more lenient the sentence length you get is, this could also show that younger people commit less severe/ harmful crimes compared to older age groups]
+---
 
 # Layouts
 

@@ -4,7 +4,7 @@
     <title>Investigating the Predictors of Violent Crime</title>
     <meta charset="utf-8" />
     <meta name="author" content="Workshop 10   Euan McKerron, Yujun Ling, Akshit Wadhawan &amp; Ariane Baillie" />
-    <meta name="date" content="2025-11-27" />
+    <meta name="date" content="2025-11-28" />
     <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -22,7 +22,7 @@ class: center, middle, inverse, title-slide
 ### University of Edinburgh
 ]
 .date[
-### 2025-11-27
+### 2025-11-28
 ]
 
 ---
@@ -106,6 +106,48 @@ As you can see in this count plot it is clear that with the exception of youth i
 ```
 
 This table highlights the disparity in the amount of time each age groups are spending in these establishments ]
+---
+#Number of prisoners by age 
+.pull-left[ 
+&lt;img src="presentation_files/figure-html/unnamed-chunk-5-1.png" width="80%" /&gt;
+
+We first found the number of prisoners per age group and found that the largest number of offenders are within the age range of  30-39. We found that the further away you move on either side of this category - the younger and/or older you get- there are less people in the prison system/ less offenders.]
+
+.pull-right[
+
+```
+## # A tibble: 9 × 3
+##   age          total percent
+##   &lt;chr&gt;        &lt;dbl&gt;   &lt;dbl&gt;
+## 1 15-17         3308   0.400
+## 2 18-20        32148   3.88 
+## 3 21-24        81632   9.86 
+## 4 25-29       132052  15.9  
+## 5 30-39       272708  32.9  
+## 6 40-49       163030  19.7  
+## 7 50-59        87242  10.5  
+## 8 60-69        37588   4.54 
+## 9 70 and over  18286   2.21
+```
+This table highlights the percentage that an age group makes up of the overall prison poulation]
+---
+#Proportion of sentence lengths by age groups
+.pull-left[
+&lt;img src="presentation_files/figure-html/unnamed-chunk-7-1.png" width="80%" /&gt;
+
+
+```
+## # A tibble: 4 × 5
+##   Category                                            total  mean median    sd
+##   &lt;chr&gt;                                               &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 12 months to less than 4 years                      2872.  957.  303.  1366.
+## 2 4 years or more (excluding indeterminate sentences) 4870. 1623.  194.  2632.
+## 3 Greater than 6 months to less than 12 months         348.  116.   30.4  159.
+## 4 Less than or equal to 6 months                       629.  210.   54.7  301.
+```
+]
+
+.pull-right[Shown in this graph is that the younger you are the more lenient the sentence length you get is, this could also show that younger people commit less severe/ harmful crimes compared to older age groups]
 ---
 
 # Layouts
