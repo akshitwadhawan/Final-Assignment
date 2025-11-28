@@ -4,7 +4,7 @@
     <title>Investigating the Predictors of Violent Crime</title>
     <meta charset="utf-8" />
     <meta name="author" content="Workshop 10   Euan McKerron, Yujun Ling, Akshit Wadhawan &amp; Ariane Baillie" />
-    <meta name="date" content="2025-11-27" />
+    <meta name="date" content="2025-11-28" />
     <script src="libs/header-attrs-2.29/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -22,7 +22,7 @@ class: center, middle, inverse, title-slide
 ### University of Edinburgh
 ]
 .date[
-### 2025-11-27
+### 2025-11-28
 ]
 
 ---
@@ -51,11 +51,12 @@ class: center, middle, inverse, title-slide
 - This investigation draws on data from the Offender Management Statistics Quarterly: January to March 2023, published by the Ministry of Justice. The dataset offers detailed records on people entering, leaving, or serving sentences within the criminal justice system in England and Wales, giving a clear picture of how individuals move through the system.
 - Our main variables after cleaning includes:
 
-|Variable |Type |Description |
-|:--------|:----|:-----------|
-|         |     |            |
-|         |     |            |
-|         |     |            |
+|Variable     |Type   |Description                                            |
+|:------------|:------|:------------------------------------------------------|
+|offence_type |factor |Describes whether a crime was violent or non-violent.  |
+|age_group    |factor |The age group of the offender.                         |
+|est_type     |factor |The type of establishment the offender was located in. |
+|sex          |factor |The sex of the offender.                               |
 These variables allow us to explore how age, sex, offence type, location, and sentence length relate to violent crime. Using official government data ensures the analysis is reliable and nationally representative.
 ---
 
@@ -252,7 +253,18 @@ class: inverse, middle, center
 
 ---
 
-# Add stuff to do with model here
+# Modelling
+
+-Based off of the prior data visualisations, we chose age group and establishment type as the explanatory variables. As our target variable was whether a crime was violent or non-violent, a binary outcome, we chose to use logistic regression as our model choice.
+
+--
+
+.pull-left[
+- Some text
+- goes here
+]
+.pull-right[
+
 
 ---
 
